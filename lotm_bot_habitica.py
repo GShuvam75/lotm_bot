@@ -408,4 +408,19 @@ async def leaderboard(ctx, top: int = 10):
     text = "\n".join([f"{i+1}. <@{r[0]}> — {r[1]} XP" for i, r in enumerate(rows)])
     await ctx.send(text)
 
-bot.run(DISCORD_TOKEN)
+def run_bot():
+    import threading
+
+    # Start Discord bot in a separate thread
+    def start_discord():
+        bot.run(DISCORD_TOKEN)
+
+    discord_thread = threading.Thread(target=start_discord)
+    discord_thread.start()
+
+    # Start the Flask webhook server
+    app.run(host=WEB_HOST, port=WEB_PORT)
+
+
+if __name__ == "__main__":
+    run_bot()
